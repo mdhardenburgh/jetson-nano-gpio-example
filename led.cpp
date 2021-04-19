@@ -12,6 +12,8 @@
 #include <unistd.h>
 #include <sys/fcntl.h>
 #include <sys/mman.h>
+#include <string>
+#include <iostream>
 
 #include "gpionano.h"
 
@@ -29,31 +31,35 @@ int main(int argc, char** argv)
     int pagemask = pagesize-1;
 
     //  This page will actually contain all the GPIO controllers, because they are co-located
-    void *base = mmap(0, pagesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, (GPIO_12 & ~pagemask));
+    void *base = mmap(0, pagesize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, (GPIO_79 & ~pagemask));
     if (base == NULL) {
         perror("mmap()");
         exit(1);
     }
 
     //  set up a pointer for convenient access -- this pointer is to the selected GPIO controller
-    gpio_t volatile *pinLed = (gpio_t volatile *)((char *)base + (GPIO_12 & pagemask));
+    gpio_t volatile *pinLed = (gpio_t volatile *)((char *)base + (GPIO_79 & pagemask));
 
     // for LED : GPIO OUT 
-    pinLed->CNF = 0x00FF;
-    pinLed->OE = OUTPUT;
-    pinLed->OUT = 0xFF;
-    
+    pinLed->CNF = 1<<7;
+    pinLed->OE = 1<<7;
+    pinLed->OUT = 1<<7;
+    uint32_t temp = pinLed->IN;
+    std::cout<<"output of reg: "<<temp<<std::endl;
+
     //  disable interrupts
-    pinLed->INT_ENB = 0x00;
+    //pinLed->INT_ENB = 0x00;
 
     // blank led light  
+    /* 
     for(uint8_t cnt = 0; cnt < 10; cnt++) {
-        pinLed->OUT ^= 0xff;
-        usleep(1000*1000);		// wait 1 sec
+        pinLed->OUT ^= 0x4;
+        sleep(1);		// wait 1 sec
     }
+    */
 
-    /* turn off the LED */
-    pinLed->OUT = 0;
+    /* turn on the LED */
+    pinLed->OUT = 1<<7;
 
     /* unmap */
     munmap(base, pagesize);
@@ -65,3 +71,4 @@ int main(int argc, char** argv)
     
     return 0;
 }
+

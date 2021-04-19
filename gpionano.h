@@ -35,8 +35,8 @@
 //  The only address we really need
 #define GPIO_216      0x6000d60C    // Jetson Nano  7[AUDIO_MCLK]
 #define GPIO_50       0x6000d108    // Jetson Nano 11[UART2_RTS]
-#define GPIO_194      0x6000d600    // Jetson Nano 15[LCD_TE]
-#define GPIO_14       0x6000d004    // Jetson Nano 13[SPI2_SCK]
+#define GPIO_79       0x6000d200    // Jetson Nano 12[DAP4_SCLK]
+#define GPIO_106      0x6000d004    // Jetson Nano 13[SPI2_SCK]
 #define GPIO_16       0x6000d008    // Jetson Nano 19[SPI1_MOSI]
 #define GPIO_38       0x6000d100    // Jetson Nano 33[GPIO_PE6]
 #define GPIO_77       0x6000d204    // Jetson Nano 38[I2S4_SDIN] // J
